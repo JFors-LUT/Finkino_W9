@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     EditText set_date;
     Button xml_button;
     ListView leffalista;
-     //List<String> namerList = new ArrayList<>();
     ArrayList<Teatteri> teatterit = new ArrayList<>();
 
 
@@ -63,14 +62,13 @@ public class MainActivity extends AppCompatActivity {
 
         set_date.addTextChangedListener(new FieldWatcher());
 
-       //xml_button.performClick();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         new LoadXML().execute("https://www.finnkino.fi/xml/TheatreAreas/");
 
         while(true) {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
                 updateSpinner();
                 break;
             } catch (InterruptedException e) {
@@ -107,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.length() != 10) {
-                show_showing.setText("Päivämäärän tulee olla muotoa pp.kk.vvvv.\n" +
-                        "Esimerkki: 22.03.2021");
+                show_showing.setText("Päivämäärän tulee olla muotoa pp.kk.vvvv.\n" + "Esimerkki: 22.03.2021");
             }else{
                 show_showing.setText("Valitse teatteri ja näytä esitykset.");
                 if(list_theater.getSelectedItem() == null){
@@ -120,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getShows(View v){
-        //show_showing.setText("");
         int teatteri = (int) list_theater.getSelectedItemId();
         int area = teatterit.get(teatteri).getId();
         String date = set_date.getText().toString();
@@ -138,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             String leffa_nimi;
-            ArrayList<String> leffaItems = new ArrayList<String>();
+            ArrayList<String> leffaItems = new ArrayList<>();
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = builder.parse(urlString);
             doc.getDocumentElement().normalize();
@@ -167,14 +163,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void readXML(String urlString) {
-        //public void readXML(View v) {
             try {
                 int ID;
                 String name;
 
                 DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                //StringBuilder
-
                 //String urlString = "https://www.finnkino.fi/xml/TheatreAreas/";
                 Document doc = builder.parse(urlString);
                 doc.getDocumentElement().normalize();
@@ -184,16 +177,12 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < nList.getLength(); i++) {
                     Node node = nList.item(i);
-                    //System.out.println("Theather: " + node.getNodeName());
 
                     if (node.getNodeType() == Node.ELEMENT_NODE) {
                         Element element = (Element) node;
                         ID = Integer.parseInt(element.getElementsByTagName("ID").item(0).getTextContent());
                         name = element.getElementsByTagName("Name").item(0).getTextContent();
                         teatterit.add(new Teatteri(ID, name));
-                        //teatherList.add(element.getElementsByTagName("Name").item(0).getTextContent());
-                        // System.out.println(element.getElementsByTagName("mitä tähän tulee?: ").item(0).getTextContent());
-                        //System.out.println(element.getElementsByTagName("mitä tähän tulee?: ").item(0).getTextContent());
 
                     }
 
@@ -206,27 +195,15 @@ public class MainActivity extends AppCompatActivity {
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
             } finally {
-                //updateSpinner();
-/*            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_spinner_item, teatherList);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            list_theater.setAdapter(dataAdapter);*/
-
                 System.out.println("-----DONEDED JOB!-----");
             }
 
         }
 
-
-    public void readJSON (View v) {
-        System.out.println("CLICK!");
-
-    }
-
     public void updateSpinner() {
         System.out.println("entered");
         List<String> namerList = new ArrayList<>();
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, namerList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -240,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateLeffalist(ArrayList leffaItems){
-        //ArrayList<String> listItems = new ArrayList<String>();
           ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, leffaItems);
         leffalista.setAdapter(adapter);
@@ -248,9 +224,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-    public void showEsitykset(View v){
-        updateSpinner();
-    }
-
 }
